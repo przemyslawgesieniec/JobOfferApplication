@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
@@ -14,14 +15,12 @@ import java.util.UUID;
 @ToString
 public class UserInput {
 
-    private String uuid;
     private String name;
     private String login;
-    private String creationDate;
+    private LocalDate creationDate;
     private String password;
 
     private UserInput() {
-        uuid = UUID.randomUUID().toString();
-        creationDate = "now";
+        creationDate = LocalDate.now();
     }
 }

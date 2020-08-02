@@ -1,5 +1,6 @@
-package pl.sda.JobOfferApplication.user;
+package pl.sda.JobOfferApplication.user.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,45 +8,45 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import pl.sda.JobOfferApplication.user.exception.UserException;
 import pl.sda.JobOfferApplication.user.model.UserInput;
 import pl.sda.JobOfferApplication.user.model.UserOutput;
+import pl.sda.JobOfferApplication.user.service.UserService;
 
-import javax.websocket.server.PathParam;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
+    @Autowired
+    private UserService userService;
+
+
     @GetMapping
     public ResponseEntity<List<UserOutput>> getAllUsers() {
 
-        final UserOutput userOutput = new UserOutput("f5c9cc41","Adam", "adam123", "23123123");
+        final List<UserOutput> allUsers = userService.getAllUsers();
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(Collections.singletonList(userOutput));
+                .body(allUsers);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserOutput> getUserById(@PathVariable(value = "id") String id) {
+    public ResponseEntity<UserOutput> getUserById(@PathVariable(value = "id") Long id) throws UserException {
 
-        System.out.println(id);
-        final UserOutput userOutput = new UserOutput("f5c9cc41-273d-4f55-9774-182a75b73929","Adam", "adam123", "23123123");
-
+        final UserOutput userById = userService.getUserById(id);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(userOutput);
+                .body(userById);
     }
 
     @PostMapping
-    public ResponseEntity<Void> postUser(@RequestBody UserInput userInput){
+    public ResponseEntity<Void> postUser(@RequestBody UserInput userInput) throws UserException {
 
-        System.out.println(userInput);
+        userService.createUser(userInput);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
